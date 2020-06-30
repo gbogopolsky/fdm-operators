@@ -20,6 +20,7 @@ def laplacian(field, dx, dy, b=0):
         Input 2D field: tensor of size (batch_size, 1, H, W)
 
     dx, dy : float
+        Spatial step for W and H directions
 
     b : float
         Parameter for the discretisation shape (see Hirsch p.164)
@@ -38,7 +39,7 @@ def laplacian(field, dx, dy, b=0):
 
     assert field.is_contiguous() and laplacian.is_contiguous(), 'Input is not contiguous'
 
-    # Compute laplacian (correction using linear interpolation at boundaries)
+    # Compute laplacian
     # center of the array
     laplacian[:, 0, 1:-1, 1:-1] = \
         (1 - b) * ((field[:, 0, 2:, 1:-1] + field[:, 0, :-2, 1:-1] - 2 * field[:, 0, 1:-1, 1:-1]) / dy**2 +

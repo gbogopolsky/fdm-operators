@@ -19,6 +19,7 @@ def scalar_rot(field, dx, dy):
         Input 2D field: tensor of size (batch_size, 2, H, W)
 
     dx, dy : float
+        Spatial step for W and H directions
 
     Returns
     -------

@@ -16,9 +16,10 @@ def gradient_scalar(field, dx, dy):
     Parameters
     ----------
     field : torch.Tensor
-        Input 2D field: tensor of size (batch_size, 1, H, W)
+        Input 1D field: tensor of size (batch_size, 1, H, W)
 
     dx, dy : float
+        Spatial step for W and H directions
 
     Returns
     -------
@@ -73,6 +74,7 @@ def gradient_diag(field, dx, dy):
         Input 2D field: tensor of size (batch_size, 2, H, W)
 
     dx, dy : float
+        Spatial step for W and H directions
 
     Returns
     -------
@@ -131,6 +133,7 @@ def gradient_vector(field, dx, dy):
         Input 2D field: tensor of size (batch_size, 2, H, W)
 
     dx, dy : float
+        Spatial step for W and H directions
 
     Returns
     -------
