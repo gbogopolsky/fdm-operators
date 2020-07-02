@@ -11,7 +11,8 @@ import numpy as np
 
 def laplacian(field, dx, dy, order=2, b=0):
     """
-    Calculates the laplacian of a scalar field (second order accurate, decentered on the boundaries).
+    Calculates the laplacian of a scalar field (second or fourth order accurate inside the domain, second order accurate
+    and decentered on the boundaries).
     The output shape is the same as the input shape.
 
     Parameters
