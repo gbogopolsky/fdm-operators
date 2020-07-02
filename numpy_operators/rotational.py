@@ -1,6 +1,6 @@
 ########################################################################################################################
 #                                                                                                                      #
-#                                                 Laplacian operator                                                   #
+#                                                 Rotational operator                                                  #
 #                                                                                                                      #
 #                               Lionel Cheng, Guillaume Bogopolsky, CERFACS, 30.06.2020                                #
 #                                                                                                                      #
@@ -26,7 +26,7 @@ def scalar_rot(field, dx, dy):
     NumPy array
         Output rotational with shape (H, W)
     """
-    rotational = np.zeros(field.shape[1:])
+    rotational = np.zeros(field.shape[1:], dtype=field.dtype)
 
     # first compute dfield_y / dx
     rotational[:, 1:-1] = (field[1, :, 2:] - field[1, :, :-2]) / (2 * dx)

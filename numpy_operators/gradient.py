@@ -1,6 +1,6 @@
 ########################################################################################################################
 #                                                                                                                      #
-#                                                 Laplacian operator                                                   #
+#                                                 Gradient operator                                                    #
 #                                                                                                                      #
 #                               Lionel Cheng, Guillaume Bogopolsky, CERFACS, 30.06.2020                                #
 #                                                                                                                      #
@@ -26,7 +26,7 @@ def gradient_scalar(field, dx, dy):
     NumPy array
         Output gradient with shape (2, H, W)
     """
-    gradient = np.zeros((2, *field.shape))
+    gradient = np.zeros((2, *field.shape), dtype=field.dtype)
 
     gradient[0, :, 1:-1] = (field[:, 2:] - field[:, :-2]) / (2 * dx)
     gradient[0, :, 0] = (4 * field[:, 1] - 3 * field[:, 0] - field[:, 2]) / (2 * dx)

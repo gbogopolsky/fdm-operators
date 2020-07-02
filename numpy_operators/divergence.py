@@ -1,6 +1,6 @@
 ########################################################################################################################
 #                                                                                                                      #
-#                                                 Laplacian operator                                                   #
+#                                                 Divergence operator                                                  #
 #                                                                                                                      #
 #                               Lionel Cheng, Guillaume Bogopolsky, CERFACS, 30.06.2020                                #
 #                                                                                                                      #
@@ -30,7 +30,7 @@ def divergence(field, dx, dy, order=2):
         Output divergence with shape (H, W)
     """
 
-    divergence = np.zeros_like(field)
+    divergence = np.zeros(field.shape[1:], dtype=field.dtype)
 
     if order == 2:
         divergence[1:-1, 1:-1] = (field[0, 1:-1, 2:] - field[0, 1:-1, :-2]) / (2 * dx) + \
