@@ -130,3 +130,6 @@ dmypy.json
 
 # PyTorch project
 .idea/
+
+# Plot output
+*.png
