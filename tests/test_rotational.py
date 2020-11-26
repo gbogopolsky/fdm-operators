@@ -9,9 +9,9 @@
 import torch
 import numpy as np
 import pytest
-from pytorch_operators.rotational import scalar_rot as torch_rot
-from numpy_operators.rotational import scalar_rot as numpy_rot
-from misc import create_grid_pytorch, create_grid_numpy
+from fdmoperators.pytorch_operators.rotational import scalar_rot as torch_rot
+from fdmoperators.numpy_operators.rotational import scalar_rot as numpy_rot
+from .misc import create_grid_pytorch, create_grid_numpy, compare_solutions
 
 
 def test_scalar_rotational_pytorch():
@@ -28,7 +28,7 @@ def test_scalar_rotational_pytorch():
 
     computed = torch_rot(field, dx, dy)
 
-    assert torch.allclose(computed, analytical, atol=1e-16, rtol=1e-14)
+    compare_solutions(computed, analytical, atol=1e-14, rtol=1e-14)
     return X, Y, computed, analytical, field
 
 
@@ -44,7 +44,7 @@ def test_scalar_rotational_numpy():
 
     computed = numpy_rot(field, dx, dy)
 
-    assert np.allclose(computed, analytical, atol=1e-16, rtol=1e-14)
+    compare_solutions(computed, analytical, atol=1e-14, rtol=1e-14)
     return X, Y, computed, analytical, field
 
 

@@ -9,9 +9,9 @@
 import torch
 import numpy as np
 import pytest
-from pytorch_operators.laplacian import laplacian as torch_lapl
-from numpy_operators.laplacian import laplacian as numpy_lapl
-from misc import create_grid_pytorch, create_grid_numpy
+from fdmoperators.pytorch_operators.laplacian import laplacian as torch_lapl
+from fdmoperators.numpy_operators.laplacian import laplacian as numpy_lapl
+from .misc import create_grid_pytorch, create_grid_numpy, compare_solutions
 
 
 @pytest.mark.parametrize("b", [0, 1/3, 1])
@@ -29,7 +29,7 @@ def test_laplacian_pytorch(b):
     computed = torch_lapl(field, dx, dy, b=b)
     print(f'b = {b} : ', torch.sum(torch.abs(computed[0, 0, :, :] - analytical[0, 0, :, :])))
 
-    assert torch.allclose(computed, analytical, atol=1e-15, rtol=1e-11)
+    compare_solutions(computed, analytical, atol=1e-10, rtol=1e-11)
     return X, Y, computed, analytical, field
 
 
@@ -48,7 +48,7 @@ def test_laplacian_pytorch_exp(b):
     computed = torch_lapl(field, dx, dy, b=b)
     print(f'b = {b} : ', torch.sum(torch.abs(computed[0, 0, :, :] - analytical[0, 0, :, :])))
 
-    assert torch.allclose(computed, analytical, atol=1e-15, rtol=1e-3)
+    compare_solutions(computed, analytical, atol=1e-10, rtol=1e-3)
     return X, Y, computed, analytical, field
 
 
@@ -65,7 +65,7 @@ def test_laplacian_numpy(b, order):
     computed = numpy_lapl(field, dx, dy, order=order, b=b)
     print(f'b = {b} : ', np.sum(np.abs(computed - analytical)))
 
-    assert np.allclose(computed, analytical, atol=1e-15, rtol=1e-11)
+    compare_solutions(computed, analytical, atol=1e-10, rtol=1e-11)
     return X, Y, computed, analytical, field
 
 
@@ -82,7 +82,7 @@ def test_laplacian_numpy_exp(b, order):
     computed = numpy_lapl(field, dx, dy, order=order, b=b)
     print(f'b = {b} : ', np.sum(np.abs(computed - analytical)))
 
-    assert np.allclose(computed, analytical, atol=1e-15, rtol=1e-3)
+    compare_solutions(computed, analytical, atol=1e-12, rtol=1e-3)
     return X, Y, computed, analytical, field
 
 

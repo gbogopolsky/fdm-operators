@@ -9,9 +9,9 @@
 import torch
 import numpy as np
 import pytest
-from pytorch_operators.gradient import gradient_scalar, gradient_diag, gradient_vector
-from numpy_operators.gradient import gradient_scalar as gradient_scalar_numpy
-from misc import create_grid_pytorch, create_grid_numpy
+from fdmoperators.pytorch_operators.gradient import gradient_scalar, gradient_diag, gradient_vector
+from fdmoperators.numpy_operators.gradient import gradient_scalar as gradient_scalar_numpy
+from .misc import create_grid_pytorch, create_grid_numpy, compare_solutions
 
 
 def test_gradient_scalar_pytorch():
@@ -28,7 +28,7 @@ def test_gradient_scalar_pytorch():
 
     computed = gradient_scalar(field, dx, dy)
 
-    assert torch.allclose(computed, analytical, atol=1e-13, rtol=1e-13)
+    compare_solutions(computed, analytical, atol=1e-13, rtol=1e-13)
     return X, Y, computed, analytical, field
 
 
@@ -44,7 +44,7 @@ def test_gradient_scalar_numpy():
 
     computed = gradient_scalar_numpy(field, dx, dy)
 
-    assert np.allclose(computed, analytical, atol=1e-13, rtol=1e-13)
+    compare_solutions(computed, analytical, atol=1e-13, rtol=1e-13)
     return X, Y, computed, analytical, field
 
 
@@ -65,7 +65,7 @@ def test_gradient_diag():
 
     computed = gradient_diag(field, dx, dy)
 
-    assert torch.allclose(computed, analytical)
+    compare_solutions(computed, analytical, atol=1e-08, rtol=1e-05)
     return X, Y, computed, analytical, field
 
 

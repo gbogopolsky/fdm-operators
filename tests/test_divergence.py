@@ -9,9 +9,12 @@
 import torch
 import numpy as np
 import pytest
-from pytorch_operators.divergence import divergence as torch_div
-from numpy_operators.divergence import divergence as numpy_div
-from misc import create_grid_pytorch, create_grid_numpy
+from fdmoperators.pytorch_operators.divergence import divergence as torch_div
+from fdmoperators.numpy_operators.divergence import divergence as numpy_div
+from .misc import create_grid_pytorch, create_grid_numpy, compare_solutions
+
+# Tolerances for result comparisons
+ATOL, RTOL = 1e-16, 1e-12
 
 
 def test_divergence_pytorch():
@@ -28,11 +31,12 @@ def test_divergence_pytorch():
 
     computed = torch_div(field, dx, dy)
 
-    assert torch.allclose(computed, analytical, atol=1e-16, rtol=1e-14)
+    compare_solutions(computed, analytical, atol=ATOL, rtol=RTOL)
     return X, Y, computed, analytical, field
 
 
-def test_divergence_numpy():
+@pytest.mark.parametrize("order", [2, 4])
+def test_divergence_numpy(order):
     """ Test the NumPy operator on an analytical case. """
     nchannels, nx, ny, dx, dy, X, Y = create_grid_numpy()
 
@@ -42,9 +46,9 @@ def test_divergence_numpy():
     field[1, :, :] = Y ** 2
     analytical = 2 * X + 2 * Y
 
-    computed = numpy_div(field, dx, dy)
+    computed = numpy_div(field, dx, dy, order=order)
 
-    assert np.allclose(computed, analytical, atol=1e-16, rtol=1e-14)
+    compare_solutions(computed, analytical, atol=ATOL, rtol=RTOL)
     return X, Y, computed, analytical, field
 
 
@@ -68,16 +72,17 @@ if __name__ == '__main__':
     plt.savefig('test_divergence_pytorch.png')
 
     # numpy_div
-    x, y, computed, analytical, field = test_divergence_numpy()
-    fig, axarr = plt.subplots(2, 2, figsize=(10, 8))
-    ax1, ax2, ax3, _ = axarr.ravel()
+    for order in [2, 4]:
+        x, y, computed, analytical, field = test_divergence_numpy(order=order)
+        fig, axarr = plt.subplots(2, 2, figsize=(10, 8))
+        ax1, ax2, ax3, _ = axarr.ravel()
 
-    p1 = ax1.contourf(x, y, analytical, 100)
-    fig.colorbar(p1, label='Analytical divergence field', ax=ax1)
-    p2 = ax2.contourf(x, y, computed, 100)
-    fig.colorbar(p2, label='Computed divergence field', ax=ax2)
-    p3 = ax3.contourf(x, y, np.abs(computed - analytical) / np.abs(analytical), 100,
-                      locator=ticker.LogLocator())
-    fig.colorbar(p3, label='Relative difference', ax=ax3)
-    plt.tight_layout()
-    plt.savefig('test_divergence_numpy.png')
+        p1 = ax1.contourf(x, y, analytical, 100)
+        fig.colorbar(p1, label='Analytical divergence field', ax=ax1)
+        p2 = ax2.contourf(x, y, computed, 100)
+        fig.colorbar(p2, label='Computed divergence field', ax=ax2)
+        p3 = ax3.contourf(x, y, np.abs(computed - analytical) / np.abs(analytical), 100,
+                          locator=ticker.LogLocator())
+        fig.colorbar(p3, label='Relative difference', ax=ax3)
+        plt.tight_layout()
+        plt.savefig(f'test_divergence_numpy_order{order}.png')
